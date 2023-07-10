@@ -1,0 +1,44 @@
+version: "3.9"
+services:
+  keycloak:
+    image: jboss/keycloak:latest 
+    container_name: keycloak
+    restart: always
+    environment:
+      KEYCLOAK_USER: admin
+      KEYCLOAK_PASSWORD: admin
+      DB_VENDOR: mysql
+      DB_ADDR: keycloak_db
+      DB_PORT: 3306
+      DB_USER: ${KEYCLOAK_DB_USER}
+      DB_PASSWORD: ${KEYCLOAK_DB_PASSWORD}
+      DB_DATABASE: keycloak
+      PROXY_ADDRESS_FORWARDING: "true"
+    networks:
+      - f-net
+    depends_on:
+      - keycloak_db
+  keycloak_db:
+    image: mysql:latest
+    restart: always
+    hostname: keycloak_db 
+    container_name: keycloak_db
+    environment:
+      MYSQL_USER: ${KEYCLOAK_DB_USER}
+      MYSQL_PASSWORD: ${KEYCLOAK_DB_PASSWORD} 
+      MYSQL_DATABASE: keycloak
+      MYSQL_ROOT_PASSWORD: ${KEYCLOAK_DB_ROOT_PASSWORD} 
+    volumes:
+      - keycloak_db:/var/lib/mysql
+    networks:
+      - f-net
+
+
+
+volumes:
+  keycloak_db:
+
+networks:
+  f-net:
+    name: f-net
+    driver: bridge                
