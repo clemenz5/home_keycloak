@@ -5,8 +5,8 @@ services:
     container_name: keycloak
     restart: always
     environment:
-      KEYCLOAK_USER: admin
-      KEYCLOAK_PASSWORD: admin
+      KEYCLOAK_USER: ${KEYCLAOK_USER}
+      KEYCLOAK_PASSWORD: ${KEYCLOAK_PASSWORD}
       DB_VENDOR: mysql
       DB_ADDR: keycloak_db
       DB_PORT: 3306
