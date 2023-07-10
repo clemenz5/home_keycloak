@@ -1,0 +1,23 @@
+server {
+	access_log /var/log/nginx/lorenz_logs.log custom_log;
+	listen 80;
+	server_name keycloak.keefer.de; 
+	location /.well-known/acme-challenge/ {
+		root /etc/letsencrypt;	
+	}
+	location / {
+		return 301 https://keycloak.keefer.de$request_uri;
+	}
+}
+server {
+	access_log /var/log/nginx/lorenz_logs.log custom_log;
+	listen 443 ssl;
+
+	server_name keycloak.keefer.de; 
+
+	location / {
+		proxy_pass http://keycloak:8080;
+		proxy_set_header Host $host;
+		proxy_set_header X-Real-IP $remote_addr;
+	}
+}
